@@ -215,16 +215,35 @@ The team lead creates the Supabase project and shares the keys with the team.
 ```sql
 create table expenses (
   id uuid default gen_random_uuid() primary key,
+  user_id uuid not null references auth.users(id) on delete cascade,
   created_at timestamp with time zone default timezone('utc', now()),
   description text not null,
   amount numeric not null,
   paid_by text not null
 );
 
--- Only logged in users can read or write expenses
+-- Users can only read/write their own expenses
 alter table expenses enable row level security;
-create policy "Users can read expenses" on expenses for select using (auth.role() = 'authenticated');
-create policy "Users can insert expenses" on expenses for insert with check (auth.role() = 'authenticated');
+create policy "Users can read own expenses"
+on expenses for select
+using (auth.uid() = user_id);
+
+create policy "Users can insert own expenses"
+on expenses for insert
+with check (auth.uid() = user_id);
+```
+
+If you already created `expenses` before this update, run this migration:
+```sql
+alter table expenses add column if not exists user_id uuid references auth.users(id) on delete cascade;
+-- Backfill or remove existing rows before setting NOT NULL.
+-- Optional clean dev reset:
+-- truncate table expenses;
+alter table expenses alter column user_id set not null;
+drop policy if exists "Users can read expenses" on expenses;
+drop policy if exists "Users can insert expenses" on expenses;
+create policy "Users can read own expenses" on expenses for select using (auth.uid() = user_id);
+create policy "Users can insert own expenses" on expenses for insert with check (auth.uid() = user_id);
 ```
 
 ### Step 3 — Get Your API Keys

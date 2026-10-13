@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { supabase } from '../lib/supabase';
@@ -12,6 +12,21 @@ export default function AddExpenseScreen() {
   const [paidBy, setPaidBy] = useState('');
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    async function ensureSession() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        Alert.alert('Session Required', 'Please sign in before adding an expense.');
+        router.replace('/');
+      }
+    }
+
+    ensureSession();
+  }, [router]);
+
   async function handleSubmit() {
     if (!description || !amount || !paidBy) {
       Alert.alert('Missing Fields', 'Please fill in all fields.');
@@ -20,9 +35,21 @@ export default function AddExpenseScreen() {
 
     setLoading(true);
 
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      setLoading(false);
+      Alert.alert('Session Required', 'Please sign in before adding an expense.');
+      router.replace('/');
+      return;
+    }
+
     // Inserts a new row into the expenses table in Supabase
     const { error } = await supabase.from('expenses').insert([
       {
+        user_id: user.id,
         description,
         amount: parseFloat(amount),
         paid_by: paidBy,

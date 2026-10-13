@@ -16,10 +16,21 @@ export default function ExpensesScreen() {
   }, []);
 
   async function fetchExpenses() {
-    // Reads all rows from the expenses table in Supabase
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      setLoading(false);
+      router.replace('/');
+      return;
+    }
+
+    // Reads only this user's rows from the expenses table in Supabase
     const { data, error } = await supabase
       .from('expenses')
       .select('*')
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false });
 
     if (error) {
