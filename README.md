@@ -42,11 +42,12 @@ Follow every section in order the first time you set up your machine.
 ```
 app/
   _layout.jsx       → Root navigation wrapper (registers all screens)
-  index.jsx         → Login screen (Module 1)
+  index.jsx         → Account access hub (Login / Create Account / Demo Account)
   expenses.jsx      → Expenses list screen (Module 2)
   add-expense.jsx   → Add expense form (Module 3)
 lib/
   supabase.js       → Supabase client — all DB/auth calls go through here
+  demoAccounts.js   → Demo-account labels + local env credential mapping
 assets/             → Icons and images
 eas.json            → EAS Build profiles (development / preview / production)
 app.json            → Expo app configuration (name, icons, bundle ID)
@@ -236,6 +237,15 @@ create policy "Users can insert expenses" on expenses for insert with check (aut
 2. Make sure **Email** is enabled
 3. For development, go to **Authentication → Settings** and turn OFF **Confirm email** so you don't need to verify during testing
 
+### Step 5 — (Optional) Create Demo Auth Users for Developers
+1. In Supabase, go to **Authentication → Users**
+2. Create demo users (safe test identities), for example:
+   - `demo.alice@example.test`
+   - `demo.bob@example.test`
+   - `demo.charlie@example.test`
+3. Share demo passwords privately with your dev team (never commit passwords to GitHub)
+4. Each developer stores those credentials in their own local `.env` file (see Part 5)
+
 ---
 
 ## Part 5 — Clone and Run the Project
@@ -273,7 +283,23 @@ Then open `.env` in WebStorm and fill in the values the team lead shared with yo
 ```
 EXPO_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+
+# Optional local-only demo login shortcuts (for dev/test only)
+EXPO_PUBLIC_ENABLE_DEMO_ACCOUNTS=true
+EXPO_PUBLIC_DEMO_ALICE_EMAIL=demo.alice@example.test
+EXPO_PUBLIC_DEMO_ALICE_PASSWORD=replace-with-local-demo-password
+EXPO_PUBLIC_DEMO_BOB_EMAIL=demo.bob@example.test
+EXPO_PUBLIC_DEMO_BOB_PASSWORD=replace-with-local-demo-password
+EXPO_PUBLIC_DEMO_CHARLIE_EMAIL=demo.charlie@example.test
+EXPO_PUBLIC_DEMO_CHARLIE_PASSWORD=replace-with-local-demo-password
 ```
+
+The app's first screen now supports three account flows:
+- **Login** (existing users)
+- **Create Account** (new users)
+- **Demo Accounts** (dev-only helper options; hidden unless `__DEV__` or `EXPO_PUBLIC_ENABLE_DEMO_ACCOUNTS=true`)
+
+In the UI, users only see app-level account wording. Backend auth/data is handled in the background.
 
 ### Step 4 — Start the App
 ```bash
