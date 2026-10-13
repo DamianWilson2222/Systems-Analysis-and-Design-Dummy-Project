@@ -7,7 +7,9 @@
     <option name="selectedModelId" value="mai-code-1.1-flash" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b90ce8d-2e50-4370-a769-83485d7f0ab2" name="Changes" comment="" />
+    <list default="true" id="5b90ce8d-2e50-4370-a769-83485d7f0ab2" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -173,7 +175,7 @@
       <workItem from="1791846945969" duration="1861000" />
       <workItem from="1791848819620" duration="10204000" />
       <workItem from="1791861735409" duration="81000" />
-      <workItem from="1791862018427" duration="6182000" />
+      <workItem from="1791862018427" duration="6511000" />
     </task>
     <servers />
   </component>
