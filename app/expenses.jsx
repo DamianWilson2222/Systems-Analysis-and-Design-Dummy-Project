@@ -1,45 +1,55 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { supabase } from '../lib/supabase';
 
 // EXPENSES SCREEN — Module 2
-// Pulls all expenses from Supabase and displays them as a list
+// Pulls current user's expenses from Supabase and displays them as a list
 // Also has a logout button and a button to navigate to Add Expense
 export default function ExpensesScreen() {
   const router = useRouter();
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    fetchExpenses();
-  }, []);
+  const fetchExpenses = useCallback(async ({ showSpinner = true } = {}) => {
+    if (showSpinner) setLoading(true);
 
-  async function fetchExpenses() {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-    if (!user) {
-      setLoading(false);
-      router.replace('/');
-      return;
-    }
+      if (!user) {
+        router.replace('/');
+        return;
+      }
 
-    // Reads only this user's rows from the expenses table in Supabase
-    const { data, error } = await supabase
-      .from('expenses')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
+      // Reads only this user's rows from the expenses table in Supabase
+      const { data, error } = await supabase
+        .from('expenses')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
 
-    if (error) {
+      if (error) {
+        Alert.alert('Error', error.message);
+      } else {
+        setExpenses(data ?? []);
+      }
+    } catch (error) {
       Alert.alert('Error', error.message);
-    } else {
-      setExpenses(data);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
     }
-    setLoading(false);
-  }
+  }, [router]);
+
+  useFocusEffect(
+    useCallback(() => {
+      void fetchExpenses();
+    }, [fetchExpenses])
+  );
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -69,13 +79,17 @@ export default function ExpensesScreen() {
 
       {loading ? (
         <Text style={styles.loading}>Loading...</Text>
-      ) : expenses.length === 0 ? (
-        <Text style={styles.empty}>No expenses yet. Add one!</Text>
       ) : (
         <FlatList
           data={expenses}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.id}
           renderItem={renderExpense}
+          ListEmptyComponent={<Text style={styles.empty}>No expenses yet. Add one!</Text>}
+          refreshing={refreshing}
+          onRefresh={() => {
+            setRefreshing(true);
+            void fetchExpenses({ showSpinner: false });
+          }}
         />
       )}
 
