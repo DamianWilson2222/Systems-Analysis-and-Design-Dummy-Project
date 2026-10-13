@@ -7,11 +7,7 @@
     <option name="selectedModelId" value="mai-code-1.1-flash" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b90ce8d-2e50-4370-a769-83485d7f0ab2" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/app.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/babel.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/babel.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eas.json" beforeDir="false" afterPath="$PROJECT_DIR$/eas.json" afterDir="false" />
-    </list>
+    <list default="true" id="5b90ce8d-2e50-4370-a769-83485d7f0ab2" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -177,7 +173,7 @@
       <workItem from="1791846945969" duration="1861000" />
       <workItem from="1791848819620" duration="10204000" />
       <workItem from="1791861735409" duration="81000" />
-      <workItem from="1791862018427" duration="5710000" />
+      <workItem from="1791862018427" duration="6182000" />
     </task>
     <servers />
   </component>
