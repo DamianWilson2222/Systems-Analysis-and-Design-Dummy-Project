@@ -18,6 +18,13 @@
       <entry key="_C:/Users/Dman-/WebstormProjects/Systems-Analysis-and-Design-Dummy-Project" value="3KcFEogb8593vjPMoh7gfvoKTQz" />
     </persistenceIdMap>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="GitHub Workflow" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -173,7 +180,7 @@
       <workItem from="1791846945969" duration="1861000" />
       <workItem from="1791848819620" duration="10204000" />
       <workItem from="1791861735409" duration="81000" />
-      <workItem from="1791862018427" duration="7226000" />
+      <workItem from="1791862018427" duration="7419000" />
     </task>
     <servers />
   </component>
